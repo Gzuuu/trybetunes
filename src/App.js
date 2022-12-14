@@ -42,12 +42,11 @@ class App extends React.Component {
   };
 
   render() {
-    const { name, length, loading, redirect } = this.state;
+    const { length, loading, redirect } = this.state;
     const login = loading ? <Loading />
       : (
         <Login
           handleChange={ this.inputChange }
-          name={ name }
           length={ length }
           loadingChange={ this.handleChange }
         />);
@@ -57,7 +56,7 @@ class App extends React.Component {
           { redirect ? <Redirect to="/search" /> : login }
         </Route>
         <Route exact path="/search">
-          <Search />
+          <Search handleChange={ this.inputChange } length={ length } />
         </Route>
         <Route exact path="/album/:id" component={ Album } />
         <Route exact path="/favorites" component={ Favorites } />
