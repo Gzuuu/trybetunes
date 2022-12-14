@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import Loading from '../pages/Loading';
 import { getUser } from '../services/userAPI';
 
@@ -31,6 +32,9 @@ class Header extends Component {
       <header data-testid="header-component">
         {loading ? <Loading />
           : name }
+        <Link to="/search" data-testid="link-to-search">Pesquisa</Link>
+        <Link to="/favorites" data-testid="link-to-favorites">Favoritos</Link>
+        <Link to="/profile" data-testid="link-to-profile">Perfil</Link>
       </header>
     );
   }
