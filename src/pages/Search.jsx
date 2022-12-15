@@ -5,10 +5,6 @@ import Loading from './Loading';
 import AllAlbuns from '../components/AllAlbuns';
 
 class Search extends Component {
-  componentDidMount() {
-
-  }
-
   render() {
     const {
       handleChange,
