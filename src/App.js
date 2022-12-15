@@ -9,6 +9,7 @@ import ProfileEdit from './pages/ProfileEdit';
 import NotFound from './pages/NotFound';
 import { createUser } from './services/userAPI';
 import Loading from './pages/Loading';
+import searchAlbumsAPI from './services/searchAlbumsAPI';
 
 class App extends React.Component {
   constructor() {
@@ -18,6 +19,8 @@ class App extends React.Component {
       length: 0,
       loading: false,
       redirect: false,
+      artistName: '',
+      albuns: [],
     };
   }
 
@@ -41,8 +44,22 @@ class App extends React.Component {
     }));
   };
 
+  clearInputAndSearch = async () => {
+    const { name } = this.state;
+    this.setState(() => ({
+      loading: true,
+      artistName: name,
+      name: '',
+    }));
+    const ApiMusic = await searchAlbumsAPI(name);
+    this.setState(() => ({
+      albuns: ApiMusic,
+      loading: false,
+    }));
+  };
+
   render() {
-    const { length, loading, redirect } = this.state;
+    const { length, loading, redirect, name, artistName, albuns } = this.state;
     const login = loading ? <Loading />
       : (
         <Login
@@ -56,7 +73,15 @@ class App extends React.Component {
           { redirect ? <Redirect to="/search" /> : login }
         </Route>
         <Route exact path="/search">
-          <Search handleChange={ this.inputChange } length={ length } />
+          <Search
+            handleChange={ this.inputChange }
+            length={ length }
+            searchApi={ this.clearInputAndSearch }
+            name={ name }
+            loading={ loading }
+            artistName={ artistName }
+            albuns={ albuns }
+          />
         </Route>
         <Route exact path="/album/:id" component={ Album } />
         <Route exact path="/favorites" component={ Favorites } />
