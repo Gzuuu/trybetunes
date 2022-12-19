@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import Header from '../components/Header';
 import MusicCard from '../components/MusicCard';
 import getMusics from '../services/musicsAPI';
+import { addSong } from '../services/favoriteSongsAPI';
+import Loading from './Loading';
 
 class Album extends Component {
   constructor() {
@@ -11,6 +13,7 @@ class Album extends Component {
       id: '',
       musicList: [],
       albumName: '',
+      loading: false,
     };
   }
 
@@ -28,8 +31,19 @@ class Album extends Component {
     }));
   };
 
+  saveSong = async (song) => {
+    this.setState(() => ({
+      loading: true,
+    }));
+    await addSong(song);
+
+    this.setState(() => ({
+      loading: false,
+    }));
+  };
+
   render() {
-    const { albumName, musicList, id } = this.state;
+    const { albumName, musicList, id, loading } = this.state;
     return (
       <div data-testid="page-album">
         <Header />
@@ -38,8 +52,14 @@ class Album extends Component {
           {' '}
           { albumName }
         </p>
+        {loading && <Loading />}
         {musicList
-          .map((music, index) => <MusicCard property={ music } key={ index } />)}
+          .map((music, index) => (
+            <MusicCard
+              property={ music }
+              key={ index }
+              save={ () => this.saveSong(music) }
+            />))}
       </div>
     );
   }
