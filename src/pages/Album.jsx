@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Header from '../components/Header';
 import MusicCard from '../components/MusicCard';
 import getMusics from '../services/musicsAPI';
-import { addSong } from '../services/favoriteSongsAPI';
+import { addSong, getFavoriteSongs, removeSong } from '../services/favoriteSongsAPI';
 import Loading from './Loading';
 
 class Album extends Component {
@@ -14,11 +14,13 @@ class Album extends Component {
       musicList: [],
       albumName: '',
       loading: false,
+      musicCompare: [],
     };
   }
 
   componentDidMount() {
     this.requestMusicAndAtt();
+    this.requestSavedSong();
   }
 
   requestMusicAndAtt = async () => {
@@ -31,19 +33,47 @@ class Album extends Component {
     }));
   };
 
+  requestSavedSong = async () => {
+    this.setState(() => ({
+      loading: true,
+    }));
+    const musics = await getFavoriteSongs();
+    this.setState(() => ({
+      loading: false,
+      musicCompare: musics,
+    }));
+    return musics;
+  };
+
   saveSong = async (song) => {
     this.setState(() => ({
       loading: true,
     }));
     await addSong(song);
-
     this.setState(() => ({
       loading: false,
     }));
   };
 
+  deleteSong = async (song) => {
+    this.setState(() => ({
+      loading: true,
+    }));
+    await removeSong(song);
+    const musics = await getFavoriteSongs();
+    this.setState(() => ({
+      loading: false,
+      musicCompare: musics,
+    }));
+  };
+
+  saveAndRemoveSong = ({ target }, song) => {
+    const { checked } = target;
+    return checked ? this.saveSong(song) : this.deleteSong(song);
+  };
+
   render() {
-    const { albumName, musicList, id, loading } = this.state;
+    const { albumName, musicList, id, loading, musicCompare } = this.state;
     return (
       <div data-testid="page-album">
         <Header />
@@ -58,7 +88,9 @@ class Album extends Component {
             <MusicCard
               property={ music }
               key={ index }
-              save={ () => this.saveSong(music) }
+              save={ (e) => this.saveAndRemoveSong(e, music) }
+              isFavorite={ musicCompare.some((favorite) => (
+                favorite.trackName === music.trackName)) }
             />))}
       </div>
     );
