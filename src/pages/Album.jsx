@@ -42,7 +42,6 @@ class Album extends Component {
       loading: false,
       musicCompare: musics,
     }));
-    return musics;
   };
 
   saveSong = async (song) => {
