@@ -24,7 +24,7 @@ Este projeto é uma demonstração de 30 segundos de músicas e foi desenvolvido
 ## 🧑‍💻 Instalação
 
 1. Clone o repositório:  
-   git clone https://github.com/Gzuuu/project-trybetunes.git
+   git clone https://github.com/Gzuuu/trybetunes.git
 
 2. Navegue até a pasta do projeto:  
    cd project-trybetunes
